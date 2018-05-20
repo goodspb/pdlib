@@ -1,0 +1,13 @@
+// $Id$
+// vim:ft=javascript
+
+// If your extension references something external, use ARG_WITH
+// ARG_WITH("pdlib", "for pdlib support", "no");
+
+// Otherwise, use ARG_ENABLE
+// ARG_ENABLE("pdlib", "enable pdlib support", "no");
+
+if (PHP_PDLIB != "no") {
+	EXTENSION("pdlib", "pdlib.c", PHP_EXTNAME_SHARED, "/DZEND_ENABLE_STATIC_TSRMLS_CACHE=1");
+}
+
