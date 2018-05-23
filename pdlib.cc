@@ -29,6 +29,7 @@ extern "C" {
 }
 #include "php_pdlib.h"
 #include "src/face_detection.h"
+#include "src/face_landmark_detection.h"
 
 /* If you declare any globals in php_pdlib.h uncomment this:
 ZEND_DECLARE_MODULE_GLOBALS(pdlib)
@@ -151,6 +152,7 @@ PHP_MINFO_FUNCTION(pdlib)
 const zend_function_entry pdlib_functions[] = {
 	PHP_FE(confirm_pdlib_compiled,	NULL)
 	PHP_FE(dlib_face_detection, dlib_face_detection_arginfo)
+	PHP_FE(dlib_face_landmark_detection, dlib_face_landmark_detection_arginfo)
 	PHP_FE_END	/* Must be the last line in pdlib_functions[] */
 };
 /* }}} */
