@@ -17,7 +17,7 @@ git clone git@github.com:davisking/dlib.git
 cd dlib/dlib
 mkdir build
 cd build
-cmake ..
+cmake -DBUILD_SHARED_LIBS=ON ..
 make
 sudo make install
 ```
