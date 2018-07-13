@@ -75,5 +75,5 @@ var_dump($landmarks);
 - [x] 1.Face Detection
 - [x] 2.Face Landmark Detection
 - [ ] 3.Deep Face Recognition
-- [ ] 4.Deep Learning Face Detection
+- [x] 4.Deep Learning Face Detection
 
