@@ -41,6 +41,11 @@ extern zend_module_entry pdlib_module_entry;
 #	define PHP_PDLIB_API
 #endif
 
+//namespace for \Dlib
+#define DLIB_NS "Dlib"
+//namespace for \Dlib\Dnn
+#define DLIB_DNN_NS ZEND_NS_NAME(DLIB_NS, "Dnn")
+
 /*
   	Declare any global variables you may need between the BEGIN
 	and END macros here:

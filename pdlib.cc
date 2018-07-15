@@ -30,6 +30,7 @@ extern "C" {
 #include "php_pdlib.h"
 #include "src/face_detection.h"
 #include "src/face_landmark_detection.h"
+#include "src/dnn_face_recognition.h"
 
 /* If you declare any globals in php_pdlib.h uncomment this:
 ZEND_DECLARE_MODULE_GLOBALS(pdlib)
@@ -95,6 +96,8 @@ PHP_MINIT_FUNCTION(pdlib)
 	/* If you have INI entries, uncomment these lines
 	REGISTER_INI_ENTRIES();
 	*/
+	dnn_face_recognition_init();
+
 	return SUCCESS;
 }
 /* }}} */
