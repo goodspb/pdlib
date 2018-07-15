@@ -3,7 +3,7 @@ PROJECT(pdlib)
 
 SET(PDLIB_VERSION 0.1.0)
 
-file(GLOB_RECURSE SRC_LIST FOLLOW_SYMLINKS src/*.c)
+file(GLOB_RECURSE SRC_LIST FOLLOW_SYMLINKS src/*.cc)
 set(SOURCE_FILES pdlib.cc php_pdlib.h)
 
 add_executable(pdlib ${SRC_LIST} ${SOURCE_FILES})
