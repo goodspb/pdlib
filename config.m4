@@ -25,6 +25,7 @@ if test "$PHP_PDLIB" != "no"; then
   PHP_SUBST(PDLIB_SHARED_LIBADD)
 
   pdlib_src_files="pdlib.cc \
+  src/chinese_whispers.cc \
   src/face_detection.cc \
   src/face_landmark_detection.cc \
   src/cnn_face_detection.cc"
