@@ -71,9 +71,28 @@ var_dump($landmarks);
 
 ```
 
+#### chinese whisers
+
+Provides raw access to dlib's `chinese_whispers` function.
+Client need to build and provide edges. Edges are provided
+as numeric array. Each element of this array should also be
+numeric array with 2 elements of long type.
+
+Returned value is also numeric array, containing obtained labels.
+
+```php
+<?php
+// This example will cluster nodes 0 and 1, but would leave 2 out.
+// $labels will look like [0,0,1].
+$edges = [[0,0], [0,1], [1,1], [2,2]];
+$labels = dlib_chinese_whispers($edges);
+
+```
+
 ## Features
 - [x] 1.Face Detection
 - [x] 2.Face Landmark Detection
 - [ ] 3.Deep Face Recognition
 - [x] 4.Deep Learning Face Detection
+- [x] 5. Raw chinese_whispers
 

@@ -28,6 +28,7 @@ extern "C" {
 	#include "ext/standard/info.h"
 }
 #include "php_pdlib.h"
+#include "src/chinese_whispers.h"
 #include "src/face_detection.h"
 #include "src/cnn_face_detection.h"
 #include "src/face_landmark_detection.h"
@@ -187,6 +188,7 @@ PHP_MINFO_FUNCTION(pdlib)
  */
 const zend_function_entry pdlib_functions[] = {
 	PHP_FE(confirm_pdlib_compiled,	NULL)
+	PHP_FE(dlib_chinese_whispers, dlib_chinese_whispers_arginfo)
 	PHP_FE(dlib_face_detection, dlib_face_detection_arginfo)
 	PHP_FE(dlib_face_landmark_detection, dlib_face_landmark_detection_arginfo)
 	PHP_FE_END	/* Must be the last line in pdlib_functions[] */
