@@ -2,6 +2,8 @@
 #include "../php_pdlib.h"
 #include "dnn_face_recognition.h"
 
+zend_class_entry *dnn_face_recognition_ce;
+
 #include <dlib/dnn.h>
 #include <dlib/gui_widgets.h>
 #include <dlib/clustering.h>
