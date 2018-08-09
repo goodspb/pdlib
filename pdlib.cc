@@ -28,7 +28,9 @@ extern "C" {
 	#include "ext/standard/info.h"
 }
 #include "php_pdlib.h"
+#include "src/chinese_whispers.h"
 #include "src/face_detection.h"
+#include "src/cnn_face_detection.h"
 #include "src/face_landmark_detection.h"
 #include "src/dnn_face_recognition.h"
 
@@ -38,6 +40,9 @@ ZEND_DECLARE_MODULE_GLOBALS(pdlib)
 
 /* True global resources - no need for thread safety here */
 static int le_pdlib;
+
+static zend_class_entry *cnn_face_detection_ce = nullptr;
+static zend_object_handlers cnn_face_detection_obj_handlers;
 
 /* {{{ PHP_INI
  */
@@ -89,10 +94,41 @@ static void php_pdlib_init_globals(zend_pdlib_globals *pdlib_globals)
 */
 /* }}} */
 
+const zend_function_entry cnn_face_detection_class_methods[] = {
+	PHP_ME(CnnFaceDetection, __construct, cnn_face_detection_ctor_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(CnnFaceDetection, detect, cnn_face_detection_detect_arginfo, ZEND_ACC_PUBLIC)
+	PHP_FE_END
+};
+
+zend_object* php_cnn_face_detection_new(zend_class_entry *class_type TSRMLS_DC)
+{
+	cnn_face_detection *cfd = (cnn_face_detection*)ecalloc(1, sizeof(cnn_face_detection));
+	zend_object_std_init(&cfd->std, class_type TSRMLS_CC);
+	object_properties_init(&cfd->std, class_type);
+	cfd->std.handlers = &cnn_face_detection_obj_handlers; //zend_get_std_object_handlers();
+
+	return &cfd->std;
+}
+
+static void php_cnn_face_detection_free(zend_object *object)
+{
+    cnn_face_detection *cfd = (cnn_face_detection*)((char*)object - XtOffsetOf(cnn_face_detection, std));
+    delete cfd->net;
+    zend_object_std_dtor(object);
+}
+
 /* {{{ PHP_MINIT_FUNCTION
  */
 PHP_MINIT_FUNCTION(pdlib)
 {
+	zend_class_entry ce;
+	INIT_CLASS_ENTRY(ce, "CnnFaceDetection", cnn_face_detection_class_methods);
+	cnn_face_detection_ce = zend_register_internal_class(&ce TSRMLS_CC);
+	cnn_face_detection_ce->create_object = php_cnn_face_detection_new;
+	memcpy(&cnn_face_detection_obj_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
+	cnn_face_detection_obj_handlers.offset = XtOffsetOf(cnn_face_detection, std);
+	cnn_face_detection_obj_handlers.free_obj = php_cnn_face_detection_free;
+
 	/* If you have INI entries, uncomment these lines
 	REGISTER_INI_ENTRIES();
 	*/
@@ -100,6 +136,7 @@ PHP_MINIT_FUNCTION(pdlib)
 
 	return SUCCESS;
 }
+
 /* }}} */
 
 /* {{{ PHP_MSHUTDOWN_FUNCTION
@@ -154,6 +191,7 @@ PHP_MINFO_FUNCTION(pdlib)
  */
 const zend_function_entry pdlib_functions[] = {
 	PHP_FE(confirm_pdlib_compiled,	NULL)
+	PHP_FE(dlib_chinese_whispers, dlib_chinese_whispers_arginfo)
 	PHP_FE(dlib_face_detection, dlib_face_detection_arginfo)
 	PHP_FE(dlib_face_landmark_detection, dlib_face_landmark_detection_arginfo)
 	PHP_FE_END	/* Must be the last line in pdlib_functions[] */
