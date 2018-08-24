@@ -1,5 +1,5 @@
 # PDlib - A PHP extension for Dlib
-A PHP extension 
+A PHP extension
 
 ## Requirements
 - Dlib 19.13+
@@ -71,7 +71,19 @@ var_dump($landmarks);
 
 ```
 
-#### chinese whisers
+Additionally, you can also use class-based approach:
+```php
+$rect = array("left"=>value, "top"=>value, "right"=>value, "bottom"=>value);
+// You can download a trained facial shape predictor from:
+// http://dlib.net/files/shape_predictor_5_face_landmarks.dat.bz2
+$fld = new FaceLandmarkDetection("path/to/shape/predictor/model");
+$parts = $fld->detect("path/to/image.jpg", $rect);
+// $parts is integer array where keys are associative values with "x" and "y" for keys
+```
+
+Note that, if you use class-based approach, you need to feed bounding box rectangle with values obtained from `dlib_face_detection`. If you use `dlib_face_landmark_detection`, everything is already done for you (and you are using HOG face detection model).
+
+#### chinese whispers
 
 Provides raw access to dlib's `chinese_whispers` function.
 Client need to build and provide edges. Edges are provided
