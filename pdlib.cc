@@ -43,6 +43,9 @@ static int le_pdlib;
 static zend_class_entry *cnn_face_detection_ce = nullptr;
 static zend_object_handlers cnn_face_detection_obj_handlers;
 
+static zend_class_entry *face_landmark_detection_ce = nullptr;
+static zend_object_handlers face_landmark_detection_obj_handlers;
+
 /* {{{ PHP_INI
  */
 /* Remove comments and fill if you need to have entries in php.ini
@@ -111,9 +114,32 @@ zend_object* php_cnn_face_detection_new(zend_class_entry *class_type TSRMLS_DC)
 
 static void php_cnn_face_detection_free(zend_object *object)
 {
-    cnn_face_detection *cfd = (cnn_face_detection*)((char*)object - XtOffsetOf(cnn_face_detection, std));
-    delete cfd->net;
-    zend_object_std_dtor(object);
+	cnn_face_detection *cfd = (cnn_face_detection*)((char*)object - XtOffsetOf(cnn_face_detection, std));
+	delete cfd->net;
+	zend_object_std_dtor(object);
+}
+
+const zend_function_entry face_landmark_detection_class_methods[] = {
+	PHP_ME(FaceLandmarkDetection, __construct, face_landmark_detection_ctor_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(FaceLandmarkDetection, detect, face_landmark_detection_detect_arginfo, ZEND_ACC_PUBLIC)
+	PHP_FE_END
+};
+
+zend_object* php_face_landmark_detection_new(zend_class_entry *class_type TSRMLS_DC)
+{
+	face_landmark_detection *fld = (face_landmark_detection*)ecalloc(1, sizeof(face_landmark_detection));
+	zend_object_std_init(&fld->std, class_type TSRMLS_CC);
+	object_properties_init(&fld->std, class_type);
+	fld->std.handlers = &face_landmark_detection_obj_handlers;
+
+	return &fld->std;
+}
+
+static void php_face_landmark_detection_free(zend_object *object)
+{
+	face_landmark_detection *fld = (face_landmark_detection*)((char*)object - XtOffsetOf(face_landmark_detection, std));
+	delete fld->sp;
+	zend_object_std_dtor(object);
 }
 
 /* {{{ PHP_MINIT_FUNCTION
@@ -121,12 +147,23 @@ static void php_cnn_face_detection_free(zend_object *object)
 PHP_MINIT_FUNCTION(pdlib)
 {
 	zend_class_entry ce;
+	// CnnFaceDetection class definition
+	//
 	INIT_CLASS_ENTRY(ce, "CnnFaceDetection", cnn_face_detection_class_methods);
 	cnn_face_detection_ce = zend_register_internal_class(&ce TSRMLS_CC);
 	cnn_face_detection_ce->create_object = php_cnn_face_detection_new;
 	memcpy(&cnn_face_detection_obj_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
 	cnn_face_detection_obj_handlers.offset = XtOffsetOf(cnn_face_detection, std);
 	cnn_face_detection_obj_handlers.free_obj = php_cnn_face_detection_free;
+
+	// FaceLandmarkDetection class definition
+	//
+	INIT_CLASS_ENTRY(ce, "FaceLandmarkDetection", face_landmark_detection_class_methods);
+	face_landmark_detection_ce = zend_register_internal_class(&ce TSRMLS_CC);
+	face_landmark_detection_ce->create_object = php_face_landmark_detection_new;
+	memcpy(&face_landmark_detection_obj_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
+	face_landmark_detection_obj_handlers.offset = XtOffsetOf(face_landmark_detection, std);
+	face_landmark_detection_obj_handlers.free_obj = php_face_landmark_detection_free;
 
 	/* If you have INI entries, uncomment these lines
 	REGISTER_INI_ENTRIES();
