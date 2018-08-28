@@ -115,7 +115,7 @@ PHP_METHOD(FaceLandmarkDetection, detect)
     // Parse path to image and bounding box. Bounding box is associative array of 4 elements - "top", "bottom", "left" and "right".
     //
     if (zend_parse_parameters(ZEND_NUM_ARGS(), "sa", &img_path, &img_path_len, &bounding_box) == FAILURE){
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Unable to parse detect arguments.");
+        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Unable to parse detect arguments");
         return;
     }
 
