@@ -61,6 +61,22 @@ ZEND_END_MODULE_GLOBALS(pdlib)
 ZEND_TSRMLS_CACHE_EXTERN()
 #endif
 
+#define PARSE_LONG_FROM_ARRAY(hashtable, key, error_key_missing, error_key_not_long) \
+    zval* data##key; \
+    /* Tries to find given key in array */ \
+    data##key = zend_hash_str_find(hashtable, #key, sizeof(#key)-1); \
+    if (data##key == nullptr) { \
+        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, #error_key_missing); \
+        return; \
+    } \
+    \
+    /* We also need to check proper type of value in associative array */ \
+    if (Z_TYPE_P(data##key) != IS_LONG) { \
+        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, #error_key_not_long); \
+        return; \
+    } \
+    zend_long key = Z_LVAL_P(data##key); \
+
 #endif	/* PHP_PDLIB_H */
 
 

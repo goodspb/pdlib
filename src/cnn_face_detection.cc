@@ -79,13 +79,13 @@ PHP_METHOD(CnnFaceDetection, detect)
 		auto dets = (*pnet)(img);
 		int rect_count = 0;
 		array_init(return_value);
-		
+
 		// Scale the detection locations back to the original image size
 		// if the image was upscaled.
 		//
 		for (auto&& d: dets) {
 			d.rect = pyr.rect_down(d.rect, upsample_num);
-			// Create new assoc array with dimensions of found rectt and confidence
+			// Create new assoc array with dimensions of found rect and confidence
 			//
 			zval rect_arr;
 			array_init(&rect_arr);

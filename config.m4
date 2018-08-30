@@ -28,7 +28,8 @@ if test "$PHP_PDLIB" != "no"; then
   src/chinese_whispers.cc \
   src/face_detection.cc \
   src/face_landmark_detection.cc \
-  src/cnn_face_detection.cc"
+  src/face_recognition.cc \
+  src/cnn_face_detection.cc "
 
   AC_MSG_CHECKING(for pkg-config)
   if test ! -f "$PKG_CONFIG"; then

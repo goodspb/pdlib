@@ -102,20 +102,8 @@ PHP_METHOD(FaceLandmarkDetection, __construct)
 
 // Helper macro to automatically have parsing of "top"/"bottom"/"left"/"right"
 #define PARSE_BOUNDING_BOX_EDGE(side) \
-    zval* data##side; \
-    /* Tries to find given key in array */ \
-    data##side = zend_hash_str_find(bounding_box_hash, #side, sizeof(#side)-1); \
-    if (data##side == nullptr) { \
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Bounding box (second argument) is missing " #side "key"); \
-        return; \
-    } \
-    \
-    /* We also need to check proper type of value in associative array */ \
-    if (Z_TYPE_P(data##side) != IS_LONG) { \
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Value of bounding box's (second argument) " #side " key is not long type"); \
-        return; \
-    } \
-    zend_long side = Z_LVAL_P(data##side); \
+    PARSE_LONG_FROM_ARRAY(bounding_box_hash, side, \
+        "Bounding box (second argument) is missing " #side "key", "Value of bounding box's (second argument) " #side " key is not long type")
 
 PHP_METHOD(FaceLandmarkDetection, detect)
 {
@@ -134,8 +122,8 @@ PHP_METHOD(FaceLandmarkDetection, detect)
     // Check that bounding box have exactly 4 elements
     HashTable *bounding_box_hash = Z_ARRVAL_P(bounding_box);
     uint32_t bounding_box_num_elements = zend_hash_num_elements(bounding_box_hash);
-    if (bounding_box_num_elements != 4) {
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Bounding box (second argument) needs to have exactly 4 elements");
+    if (bounding_box_num_elements < 4) {
+        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Bounding box (second argument) needs to have at least 4 elements");
         return;
     }
 
@@ -158,14 +146,28 @@ PHP_METHOD(FaceLandmarkDetection, detect)
         // Each key is one part from shape. Value of each part is associative array of keys "x" and "y".
         //
         array_init(return_value);
+
+        zval rect_arr, parts_arr;
+        array_init(&rect_arr);
+        array_init(&parts_arr);
+
         for (int i = 0; i < shape.num_parts(); i++) {
             zval part;
             array_init(&part);
             dlib::point p = shape.part(i);
             add_assoc_long(&part, "x", p.x());
             add_assoc_long(&part, "y", p.y());
-            add_next_index_zval(return_value, &part);
+            add_next_index_zval(&parts_arr, &part);
         }
+
+        const rectangle& r = shape.get_rect();
+        add_assoc_long(&rect_arr, "left", r.left());
+        add_assoc_long(&rect_arr, "top", r.top());
+        add_assoc_long(&rect_arr, "right", r.right());
+        add_assoc_long(&rect_arr, "bottom", r.bottom());
+
+        add_assoc_zval(return_value, "rect", &rect_arr);
+        add_assoc_zval(return_value, "parts", &parts_arr);
     } catch (exception& e) {
         zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, e.what());
         return;
