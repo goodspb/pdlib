@@ -1,16 +1,15 @@
 # PDlib - A PHP extension for Dlib
-A PHP extension
 
 ## Requirements
 - Dlib 19.13+
 - PHP 7.0+
-- C++ 11
+- C++11
 
-## Dependence
+## Dependencies
 
 ### Dlib
 
-Install Dlib as share library
+Install Dlib as shared library
 
 ```bash
 git clone git@github.com:davisking/dlib.git
@@ -33,23 +32,62 @@ make
 sudo make install
 ```
 
-## Configure
+### Configure PHP installation
 
-```
+```bash
 vim youpath/php.ini
 ```
 
-Write the below content into `php.ini`
+Append the content below into `php.ini`
 
 ```
 [pdlib]
 extension="pdlib.so"
 ```
 
+## Tests
+
+For tests, you will need to have bz2 extension installed. On Ubuntu, it boils to:
+```bash
+sudo apt-get install php-bz2
+```
+
+After you successfully compiled everything, just run:
+```bash
+make test
+```
+
 ## Usage
 
+### General Usage
+
+Good starting point can be `tests/integration_face_recognition.phpt`. Check that first.
+
+Basically, if you just quickly want to get from your image to 128D descriptor of faces in image,
+here is really minimal example how:
+
+```php
+<?php
+$img_path = "image.jpg";
+$fd = new CnnFaceDetection("detection_cnn_model.dat");
+$detected_faces = $fd->detect($img_path);
+foreach($detected_faces as $detected_face) {
+  $fld = new FaceLandmarkDetection("landmark_model.dat");
+  $landmarks = $fld->detect($img_path, $detected_face);
+  $fr = new FaceRecognition("recognition_model.dat");
+  $descriptor = $fr->computeDescriptor($img_path, $landmarks);
+  // Optionally use descriptor later in `dlib_chinese_whispers` function
+}
+```
+
+Location from where to get these models can be found on DLib website, as well as in `tests/integration_face_recognition.phpt` test.
+
+### Specific use cases
 
 #### face detection
+
+If you want to use HOG based approach:
+
 ```php
 <?php
 
@@ -57,8 +95,18 @@ extension="pdlib.so"
 $faceCount = dlib_face_detection("~/a.jpg");
 // how mary face in the picture.
 var_dump($faceCount);
-
 ```
+
+If you want to use CNN approach (and CNN model):
+
+```php
+<?php
+$fd = new CnnFaceDetection("detection_cnn_model.dat");
+$detected_faces = $fd->detect("image.jpg");
+// $detected_face is indexed array, where values are assoc arrays with "top", "bottom", "left" and "right" values
+```
+
+CNN model can get you slightly better results, but is much, much more demanding (CPU and memory, GPU is also preferred).
 
 #### face landmark detection
 
@@ -68,7 +116,6 @@ var_dump($faceCount);
 // face landmark detection
 $landmarks = dlib_face_landmark_detection("~/a.jpg");
 var_dump($landmarks);
-
 ```
 
 Additionally, you can also use class-based approach:
@@ -82,6 +129,19 @@ $parts = $fld->detect("path/to/image.jpg", $rect);
 ```
 
 Note that, if you use class-based approach, you need to feed bounding box rectangle with values obtained from `dlib_face_detection`. If you use `dlib_face_landmark_detection`, everything is already done for you (and you are using HOG face detection model).
+
+#### face recognition (aka getting face descriptor)
+
+```php
+<?php
+
+$fr = new FaceRecognition($model_path);
+$landmarks = array(
+    "rect" => $rect_of_faces_obtained_with_CnnFaceDetection,
+    "parts" => $parts_obtained_with_FaceLandmarkDetection);
+$descriptor = $fr->computeDescriptor($img_path, $landmarks);
+// $descriptor is 128D array
+```
 
 #### chinese whispers
 
@@ -98,13 +158,12 @@ Returned value is also numeric array, containing obtained labels.
 // $labels will look like [0,0,1].
 $edges = [[0,0], [0,1], [1,1], [2,2]];
 $labels = dlib_chinese_whispers($edges);
-
 ```
 
 ## Features
 - [x] 1.Face Detection
 - [x] 2.Face Landmark Detection
-- [ ] 3.Deep Face Recognition
+- [x] 3.Deep Face Recognition
 - [x] 4.Deep Learning Face Detection
 - [x] 5. Raw chinese_whispers
 

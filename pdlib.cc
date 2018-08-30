@@ -30,6 +30,7 @@ extern "C" {
 #include "php_pdlib.h"
 #include "src/chinese_whispers.h"
 #include "src/face_detection.h"
+#include "src/face_recognition.h"
 #include "src/cnn_face_detection.h"
 #include "src/face_landmark_detection.h"
 
@@ -45,6 +46,9 @@ static zend_object_handlers cnn_face_detection_obj_handlers;
 
 static zend_class_entry *face_landmark_detection_ce = nullptr;
 static zend_object_handlers face_landmark_detection_obj_handlers;
+
+static zend_class_entry *face_recognition_ce = nullptr;
+static zend_object_handlers face_recognition_obj_handlers;
 
 /* {{{ PHP_INI
  */
@@ -142,6 +146,29 @@ static void php_face_landmark_detection_free(zend_object *object)
 	zend_object_std_dtor(object);
 }
 
+const zend_function_entry face_recognition_class_methods[] = {
+	PHP_ME(FaceRecognition, __construct, face_recognition_ctor_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(FaceRecognition, computeDescriptor, face_recognition_compute_descriptor_arginfo, ZEND_ACC_PUBLIC)
+	PHP_FE_END
+};
+
+zend_object* php_face_recognition_new(zend_class_entry *class_type TSRMLS_DC)
+{
+	face_recognition *fr = (face_recognition*)ecalloc(1, sizeof(face_recognition));
+	zend_object_std_init(&fr->std, class_type TSRMLS_CC);
+	object_properties_init(&fr->std, class_type);
+	fr->std.handlers = &face_recognition_obj_handlers;
+
+	return &fr->std;
+}
+
+static void php_face_recognition_free(zend_object *object)
+{
+	face_recognition *fr = (face_recognition*)((char*)object - XtOffsetOf(face_recognition, std));
+	delete fr->net;
+	zend_object_std_dtor(object);
+}
+
 /* {{{ PHP_MINIT_FUNCTION
  */
 PHP_MINIT_FUNCTION(pdlib)
@@ -164,6 +191,15 @@ PHP_MINIT_FUNCTION(pdlib)
 	memcpy(&face_landmark_detection_obj_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
 	face_landmark_detection_obj_handlers.offset = XtOffsetOf(face_landmark_detection, std);
 	face_landmark_detection_obj_handlers.free_obj = php_face_landmark_detection_free;
+
+	// FaceRecognition class definition
+	//
+	INIT_CLASS_ENTRY(ce, "FaceRecognition", face_recognition_class_methods);
+	face_recognition_ce = zend_register_internal_class(&ce TSRMLS_CC);
+	face_recognition_ce->create_object = php_face_recognition_new;
+	memcpy(&face_recognition_obj_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
+	face_recognition_obj_handlers.offset = XtOffsetOf(face_recognition, std);
+	face_recognition_obj_handlers.free_obj = php_face_recognition_free;
 
 	/* If you have INI entries, uncomment these lines
 	REGISTER_INI_ENTRIES();
