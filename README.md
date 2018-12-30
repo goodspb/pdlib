@@ -12,7 +12,7 @@
 Install Dlib as shared library
 
 ```bash
-git clone git@github.com:davisking/dlib.git
+git clone https://github.com/davisking/dlib.git
 cd dlib/dlib
 mkdir build
 cd build
