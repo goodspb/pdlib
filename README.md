@@ -4,6 +4,14 @@
 - Dlib 19.13+
 - PHP 7.0+
 - C++11
+- libx11-dev (on Ubuntu: `sudo apt-get install libx11-dev`)
+
+## Recommended
+- BLAS library  
+If no BLAS library found - dlib's built in BLAS will be used.
+However, if you install an optimized BLAS such as OpenBLAS or the Intel MKL your code
+will run faster.  On Ubuntu you can install OpenBLAS by executing:
+`sudo apt-get install libopenblas-dev liblapack-dev`
 
 ## Dependencies
 
