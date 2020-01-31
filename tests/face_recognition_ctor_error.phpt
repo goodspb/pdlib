@@ -10,6 +10,6 @@ try {
 	var_dump($e->getMessage());
 }
 ?>
---EXPECT--
-Warning: FaceRecognition::__construct() expects exactly 1 parameter, 0 given in /home/branko/pdlib/tests/face_recognition_ctor_error.php on line 3
+--EXPECTF--
+Warning: FaceRecognition::__construct() expects exactly 1 parameter, 0 given in %s on line 3
 string(43) "Unable to parse face_recognition_model_path"

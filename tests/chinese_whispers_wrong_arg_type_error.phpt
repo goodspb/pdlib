@@ -10,6 +10,6 @@ try {
     var_dump($e->getMessage());
 }
 ?>
---EXPECT--
-Warning: dlib_chinese_whispers() expects parameter 1 to be array, string given in /home/branko/pdlib/tests/chinese_whispers_wrong_arg_type_error.php on line 3
+--EXPECTF--
+Warning: dlib_chinese_whispers() expects parameter 1 to be array, string given in %s on line 3
 string(46) "Unable to parse edges in dlib_chinese_whispers"
