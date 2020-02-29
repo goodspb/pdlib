@@ -100,9 +100,8 @@ If you want to use HOG based approach:
 <?php
 
 // face detection
-$faceCount = dlib_face_detection("~/a.jpg");
-// how mary face in the picture.
-var_dump($faceCount);
+detected_faces = dlib_face_detection("image.jpg");
+// $detected_faces is indexed array, where values are assoc arrays with "top", "bottom", "left" and "right" values
 ```
 
 If you want to use CNN approach (and CNN model):

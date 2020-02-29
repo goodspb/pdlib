@@ -15,7 +15,7 @@ PHP_FUNCTION(dlib_face_detection)
     char  *img_path;
     size_t  img_path_len;
 
-    if(zend_parse_parameters(ZEND_NUM_ARGS(), "s", &img_path, &img_path_len) == FAILURE){
+    if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &img_path, &img_path_len) == FAILURE) {
         RETURN_FALSE;
     }
     try {
@@ -24,9 +24,20 @@ PHP_FUNCTION(dlib_face_detection)
         array2d<unsigned char> img;
         load_image(img, img_path);
 
-        pyramid_up(img);
+        array_init(return_value);
+
         std::vector<rectangle> dets = detector(img);
-        RETURN_LONG(dets.size());
+        for (unsigned long i = 0; i < dets.size(); ++i) {
+            zval rect_arr;
+            array_init(&rect_arr);
+            add_assoc_long(&rect_arr, "left", dets[i].left());
+            add_assoc_long(&rect_arr, "top", dets[i].top());
+            add_assoc_long(&rect_arr, "right", dets[i].right());
+            add_assoc_long(&rect_arr, "bottom", dets[i].bottom());
+            // Add this assoc array to returned array
+            //
+            add_next_index_zval(return_value, &rect_arr);
+        }
     }
     catch (exception& e)
     {
