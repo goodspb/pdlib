@@ -51,7 +51,7 @@ PHP_METHOD(CnnFaceDetection, detect)
 {
 	char *img_path;
 	size_t img_path_len;
-	long upsample_num = 1;
+	long upsample_num = 0;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s|l", &img_path, &img_path_len, &upsample_num) == FAILURE){
 		zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Unable to parse detect arguments");
