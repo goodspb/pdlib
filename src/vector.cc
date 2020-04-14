@@ -39,7 +39,7 @@ PHP_FUNCTION(dlib_vector_length)
 		elem_x = zend_hash_index_find(Z_ARRVAL_P(x_arg), i);
 		elem_y = zend_hash_index_find(Z_ARRVAL_P(y_arg), i);
 
-		sum += pow(Z_DVAL_P(elem_x) - Z_DVAL_P(elem_y), 2);
+		sum += (Z_DVAL_P(elem_x) - Z_DVAL_P(elem_y))*(Z_DVAL_P(elem_x) - Z_DVAL_P(elem_y));
 	}
 
 	RETURN_DOUBLE(sqrt(sum));
