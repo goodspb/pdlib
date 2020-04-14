@@ -24,12 +24,14 @@ if test "$PHP_PDLIB" != "no"; then
   PHP_ADD_LIBRARY(stdc++, 1, PDLIB_SHARED_LIBADD)
   PHP_SUBST(PDLIB_SHARED_LIBADD)
 
-  pdlib_src_files="pdlib.cc \
-  src/chinese_whispers.cc \
-  src/face_detection.cc \
-  src/face_landmark_detection.cc \
-  src/face_recognition.cc \
-  src/cnn_face_detection.cc "
+  pdlib_src_files="
+    pdlib.cc \
+    src/chinese_whispers.cc \
+    src/face_detection.cc \
+    src/face_landmark_detection.cc \
+    src/face_recognition.cc \
+    src/cnn_face_detection.cc \
+    src/vector.cc"
 
   AC_MSG_CHECKING(for pkg-config)
   if test ! -f "$PKG_CONFIG"; then
