@@ -22,11 +22,12 @@ extern "C" {
 	#ifdef HAVE_CONFIG_H
 	#include "config.h"
 	#endif
-
 	#include "php.h"
 	#include "php_ini.h"
 	#include "ext/standard/info.h"
 }
+
+	#include <dlib/simd/simd_check.h>
 
 #include "php_pdlib.h"
 #include "src/chinese_whispers.h"
@@ -62,27 +63,6 @@ PHP_INI_END()
 */
 /* }}} */
 
-/* Remove the following function when you have successfully modified config.m4
-   so that your module can be compiled into PHP, it exists only for testing
-   purposes. */
-
-/* Every user-visible function in PHP should document itself in the source */
-/* {{{ proto string confirm_pdlib_compiled(string arg)
-   Return a string to confirm that the module is compiled in */
-PHP_FUNCTION(confirm_pdlib_compiled)
-{
-	char *arg = NULL;
-	size_t arg_len, len;
-	zend_string *strg;
-
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &arg, &arg_len) == FAILURE) {
-		return;
-	}
-
-	strg = strpprintf(0, "Congratulations! You have successfully modified ext/%.78s/config.m4. Module %.78s is now compiled into PHP.", "pdlib", arg);
-
-	RETURN_STR(strg);
-}
 /* }}} */
 /* The previous line is meant for vim and emacs, so it can correctly fold and
    unfold functions in source code. See the corresponding marks just before
@@ -248,7 +228,49 @@ PHP_RSHUTDOWN_FUNCTION(pdlib)
 PHP_MINFO_FUNCTION(pdlib)
 {
 	php_info_print_table_start();
-	php_info_print_table_header(2, "pdlib support", "enabled");
+	php_info_print_table_header(2, "PDlib support", "enabled");
+	php_info_print_table_header(2, "Pdlib Version", PHP_PDLIB_VERSION);
+//	php_info_print_table_header(2, "Dlib Version", DLIB_VERSION);
+#ifdef DLIB_USE_CUDA
+	php_info_print_table_header(2, "DLIB_USE_CUDA", "true");
+#else
+	php_info_print_table_header(2, "DLIB_USE_CUDA", "false");
+#endif
+#ifdef DLIB_USE_BLAS
+	php_info_print_table_header(2, "DLIB_USE_BLAS", "true");
+#else
+	php_info_print_table_header(2, "DLIB_USE_BLAS", "false");
+#endif
+#ifdef DLIB_USE_LAPACK
+	php_info_print_table_header(2, "DLIB_USE_LAPACK", "true");
+#else
+	php_info_print_table_header(2, "DLIB_USE_LAPACK", "false");
+#endif
+#ifdef DLIB_HAVE_AVX
+	php_info_print_table_header(2, "USE_AVX_INSTRUCTIONS", "true");
+#else
+	php_info_print_table_header(2, "USE_AVX_INSTRUCTIONS", "false");
+#endif
+#ifdef DLIB_HAVE_AVX2
+	php_info_print_table_header(2, "USE_AVX2_INSTRUCTIONS", "true");
+#else
+	php_info_print_table_header(2, "USE_AVX2_INSTRUCTIONS", "false");
+#endif
+#ifdef DLIB_HAVE_NEON
+	php_info_print_table_header(2, "USE_NEON_INSTRUCTIONS", "true");
+#else
+	php_info_print_table_header(2, "USE_NEON_INSTRUCTIONS", "false");
+#endif
+#ifdef DLIB_HAVE_SSE2
+	php_info_print_table_header(2, "USE_SSE2_INSTRUCTIONS", "true");
+#else
+	php_info_print_table_header(2, "USE_SSE2_INSTRUCTIONS", "false");
+#endif
+#ifdef DLIB_HAVE_SSE41
+	php_info_print_table_header(2, "USE_SSE4_INSTRUCTIONS", "true");
+#else
+	php_info_print_table_header(2, "USE_SSE4_INSTRUCTIONS", "false");
+#endif
 	php_info_print_table_end();
 
 	/* Remove comments if you have entries in php.ini
@@ -262,7 +284,6 @@ PHP_MINFO_FUNCTION(pdlib)
  * Every user visible function must have an entry in pdlib_functions[].
  */
 const zend_function_entry pdlib_functions[] = {
-	PHP_FE(confirm_pdlib_compiled, NULL)
 	PHP_FE(dlib_chinese_whispers, dlib_chinese_whispers_arginfo)
 	PHP_FE(dlib_face_detection, dlib_face_detection_arginfo)
 	PHP_FE(dlib_face_landmark_detection, dlib_face_landmark_detection_arginfo)
