@@ -5,12 +5,10 @@ sudo: false
 language: php
 
 php:
-  - 7.0
   - 7.1
   - 7.2
   - 7.3
   - 7.4
-  - nightly
 
 before_install:
   - sudo sh -c 'echo "deb https://repo.delellis.com.ar bionic bionic" > /etc/apt/sources.list.d/20-pdlib.list'
@@ -21,6 +19,8 @@ before_install:
   - phpize
   - ./configure --enable-debug
   - make
+  - sudo make install
+  - echo "extension=pdlib.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
 script:
   - export TEST_PHP_EXECUTABLE=`which php`
