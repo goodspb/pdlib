@@ -32,9 +32,7 @@ if test "$PHP_PDLIB" != "no"; then
   src/cnn_face_detection.cc "
 
   AC_MSG_CHECKING(for pkg-config)
-  if test ! -f "$PKG_CONFIG"; then
-        PKG_CONFIG=`which pkg-config`
-  fi
+  AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
 
   if test -x "$PKG_CONFIG" && $PKG_CONFIG --exists dlib-1; then
      if $PKG_CONFIG dlib-1 --atleast-version 19.00; then
@@ -51,5 +49,5 @@ if test "$PHP_PDLIB" != "no"; then
   PHP_EVAL_LIBLINE($LIBDLIB_LIBDIR, PDLIB_SHARED_LIBADD)
   PHP_EVAL_INCLINE($LIBDLIB_CFLAGS)
 
-  PHP_NEW_EXTENSION(pdlib, $pdlib_src_files, $ext_shared,, -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1)
+  PHP_NEW_EXTENSION(pdlib, $pdlib_src_files, $ext_shared,, -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1, cxx)
 fi
