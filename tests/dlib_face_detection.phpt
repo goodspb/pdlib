@@ -1,7 +1,10 @@
 --TEST--
 Frontal face detection.
 --SKIPIF--
-<?php if (!extension_loaded("pdlib") print "skip"; ?>
+<?php
+if (!extension_loaded("pdlib"))  die('skip pdlib extension missing');
+if (getenv("SKIP_SLOW_TESTS")) die('skip slow test');
+?>
 --FILE--
 <?php
 printf("Simple detection\n");
