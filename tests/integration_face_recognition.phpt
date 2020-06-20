@@ -1,7 +1,11 @@
 --TEST--
 Full test for face recognition - download models, detect faces, landmark detection and face recognition.
 --SKIPIF--
-<?php if (!extension_loaded("pdlib") || (function_exists("bzopen"))) print "skip"; ?>
+<?php
+if (!extension_loaded("pdlib"))  die('skip pdlib extension missing');
+if (!function_exists("bzopen"))  die('skip bz2 extension missing');
+if (getenv("SKIP_ONLINE_TESTS")) die('skip online test');
+?>
 --FILE--
 <?php
 $models = array(
