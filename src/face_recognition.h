@@ -44,14 +44,18 @@ typedef struct _face_recognition {
 } face_recognition;
 
 ZEND_BEGIN_ARG_INFO_EX(face_recognition_ctor_arginfo, 0, 0, 1)
-    ZEND_ARG_INFO(0, face_recognition_model_path)
+    ZEND_ARG_TYPE_INFO(0, face_recognition_model_path, IS_STRING, 0)
 ZEND_END_ARG_INFO()
 PHP_METHOD(FaceRecognition, __construct);
 
-ZEND_BEGIN_ARG_INFO_EX(face_recognition_compute_descriptor_arginfo, 0, 0, 3)
-    ZEND_ARG_INFO(0, img_path)
-    ZEND_ARG_INFO(0, landmarks)
-    ZEND_ARG_INFO(0, num_jitters)
+ZEND_BEGIN_ARG_INFO_EX(face_recognition_compute_descriptor_arginfo, 0, 0, 2)
+    ZEND_ARG_TYPE_INFO(0, img_path, IS_STRING, 0)
+    ZEND_ARG_ARRAY_INFO(0, landmarks, 0)
+#if PHP_VERSION_ID < 80000
+    ZEND_ARG_TYPE_INFO(0, num_jitters, IS_LONG, 0)
+#else
+    ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, num_jitters, IS_LONG, 0, "1")
+#endif
 ZEND_END_ARG_INFO()
 PHP_METHOD(FaceRecognition, computeDescriptor);
 

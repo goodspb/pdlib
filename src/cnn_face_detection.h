@@ -23,13 +23,17 @@ typedef struct _cnn_face_detection {
 } cnn_face_detection;
 
 ZEND_BEGIN_ARG_INFO_EX(cnn_face_detection_ctor_arginfo, 0, 0, 1)
-    ZEND_ARG_INFO(0, cnn_face_detection_model_path)
+    ZEND_ARG_TYPE_INFO(0, cnn_face_detection_model_path, IS_STRING, 0)
 ZEND_END_ARG_INFO()
 PHP_METHOD(CnnFaceDetection, __construct);
 
-ZEND_BEGIN_ARG_INFO_EX(cnn_face_detection_detect_arginfo, 0, 0, 2)
-    ZEND_ARG_INFO(0, img_path)
-    ZEND_ARG_INFO(0, upsample_num)
+ZEND_BEGIN_ARG_INFO_EX(cnn_face_detection_detect_arginfo, 0, 0, 1)
+    ZEND_ARG_TYPE_INFO(0, img_path, IS_STRING, 0)
+#if PHP_VERSION_ID < 80000
+    ZEND_ARG_TYPE_INFO(0, upsample_num, IS_LONG, 0)
+#else
+    ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, upsample_num, IS_LONG, 0, "0")
+#endif
 ZEND_END_ARG_INFO()
 PHP_METHOD(CnnFaceDetection, detect);
 

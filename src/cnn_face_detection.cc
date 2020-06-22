@@ -29,9 +29,8 @@ PHP_METHOD(CnnFaceDetection, __construct)
 		return;
 	}
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s",
+	if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "p",
 				&sz_cnn_face_detection_model_path, &cnn_face_detection_model_path_len) == FAILURE){
-		zend_throw_exception_ex(zend_ce_exception, 0, "Unable to parse face_detection_model_path");
 		return;
 	}
 
@@ -53,8 +52,7 @@ PHP_METHOD(CnnFaceDetection, detect)
 	size_t img_path_len;
 	long upsample_num = 0;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s|l", &img_path, &img_path_len, &upsample_num) == FAILURE){
-		zend_throw_exception_ex(zend_ce_exception, 0, "Unable to parse detect arguments");
+	if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "p|l", &img_path, &img_path_len, &upsample_num) == FAILURE){
 		RETURN_FALSE;
 	}
 

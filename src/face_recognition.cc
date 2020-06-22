@@ -26,9 +26,8 @@ PHP_METHOD(FaceRecognition, __construct)
         return;
     }
 
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "s",
+    if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "p",
                 &sz_face_recognition_model_path, &face_recognition_model_path_len) == FAILURE){
-        zend_throw_exception_ex(zend_ce_exception, 0, "Unable to parse face_recognition_model_path");
         return;
     }
 
@@ -73,8 +72,7 @@ PHP_METHOD(FaceRecognition, computeDescriptor)
     zval *shape;
     long num_jitters = 1;
 
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "sa|l", &img_path, &img_path_len, &shape, &num_jitters) == FAILURE){
-        zend_throw_exception_ex(zend_ce_exception, 0, "Unable to parse computeDescriptor arguments");
+    if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "pa|l", &img_path, &img_path_len, &shape, &num_jitters) == FAILURE){
         return;
     }
 

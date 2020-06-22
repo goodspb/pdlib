@@ -27,7 +27,7 @@ PHP_FUNCTION(dlib_face_landmark_detection)
     char  *img_path;
     size_t  shape_predictor_file_path_len, img_path_len;
 
-    if(zend_parse_parameters(ZEND_NUM_ARGS(), "ss", &shape_predictor_file_path, &shape_predictor_file_path_len,
+    if(zend_parse_parameters_throw(ZEND_NUM_ARGS(), "ss", &shape_predictor_file_path, &shape_predictor_file_path_len,
             &img_path, &img_path_len) == FAILURE){
         RETURN_FALSE;
     }
@@ -83,9 +83,8 @@ PHP_METHOD(FaceLandmarkDetection, __construct)
     }
 
     // Parse predictor model's path
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "s",
+    if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "p",
                 &sz_shape_predictor_file_path, &shape_predictor_file_path_len) == FAILURE){
-        zend_throw_exception_ex(zend_ce_exception, 0, "Unable to parse shape_predictor_file_path");
         return;
     }
 
@@ -114,8 +113,7 @@ PHP_METHOD(FaceLandmarkDetection, detect)
 
     // Parse path to image and bounding box. Bounding box is associative array of 4 elements - "top", "bottom", "left" and "right".
     //
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "sa", &img_path, &img_path_len, &bounding_box) == FAILURE){
-        zend_throw_exception_ex(zend_ce_exception, 0, "Unable to parse detect arguments");
+    if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "pa", &img_path, &img_path_len, &bounding_box) == FAILURE){
         return;
     }
 

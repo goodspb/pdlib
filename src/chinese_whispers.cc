@@ -17,11 +17,7 @@ PHP_FUNCTION(dlib_chinese_whispers)
 	std::vector<sample_pair> edges;
 	std::vector<unsigned long> labels;
 
-	if(zend_parse_parameters(ZEND_NUM_ARGS(), "a", &edges_arg) == FAILURE){
-        zend_throw_exception_ex(
-                zend_ce_exception,
-                0,
-                "Unable to parse edges in dlib_chinese_whispers");
+	if(zend_parse_parameters_throw(ZEND_NUM_ARGS(), "a", &edges_arg) == FAILURE){
         return;
 	}
 
