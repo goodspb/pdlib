@@ -33,6 +33,7 @@ extern "C" {
 #include "src/face_recognition.h"
 #include "src/cnn_face_detection.h"
 #include "src/face_landmark_detection.h"
+#include <dlib/revision.h>
 
 /* If you declare any globals in php_pdlib.h uncomment this:
 ZEND_DECLARE_MODULE_GLOBALS(pdlib)
@@ -245,8 +246,13 @@ PHP_RSHUTDOWN_FUNCTION(pdlib)
  */
 PHP_MINFO_FUNCTION(pdlib)
 {
+	char buf[32];
+
 	php_info_print_table_start();
 	php_info_print_table_header(2, "pdlib support", "enabled");
+	php_info_print_table_row(2, "pdlib extension version", PHP_PDLIB_VERSION);
+	snprintf(buf, sizeof(buf), "%d.%d.%d", DLIB_MAJOR_VERSION, DLIB_MINOR_VERSION, DLIB_PATCH_VERSION);
+	php_info_print_table_row(2, "dlib library version", buf);
 	php_info_print_table_end();
 
 	/* Remove comments if you have entries in php.ini
