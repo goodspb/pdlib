@@ -37,7 +37,7 @@ PHP_METHOD(FaceRecognition, __construct)
         fr->net = new anet_type;
         deserialize(face_recognition_model_path) >> *(fr->net);
     } catch (exception& e) {
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, e.what());
+        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "%s", e.what());
         return;
     }
 }
@@ -183,7 +183,7 @@ PHP_METHOD(FaceRecognition, computeDescriptor)
             add_next_index_double(return_value, d);
         }
     } catch (exception& e) {
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, e.what());
+        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "%s", e.what());
         return;
     }
 }

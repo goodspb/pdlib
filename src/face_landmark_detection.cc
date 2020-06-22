@@ -52,7 +52,7 @@ PHP_FUNCTION(dlib_face_landmark_detection)
 
             zval ARRAY_NAME_WITH_INDEX(face, j);
             array_init(&ARRAY_NAME_WITH_INDEX(face, j));
-            for (int k = 0; k < shape.num_parts(); k++) {
+            for (unsigned int k = 0; k < shape.num_parts(); k++) {
                 zval ARRAY_NAME_WITH_INDEX(part, k);
                 array_init(&ARRAY_NAME_WITH_INDEX(part, k));
                 dlib::point p = shape.part(k);
@@ -95,7 +95,7 @@ PHP_METHOD(FaceLandmarkDetection, __construct)
         fld->sp = new shape_predictor;
         deserialize(shape_predictor_file_path) >> *(fld->sp);
     } catch (exception& e) {
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, e.what());
+        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "%s", e.what());
         return;
     }
 }
@@ -151,7 +151,7 @@ PHP_METHOD(FaceLandmarkDetection, detect)
         array_init(&rect_arr);
         array_init(&parts_arr);
 
-        for (int i = 0; i < shape.num_parts(); i++) {
+        for (unsigned int i = 0; i < shape.num_parts(); i++) {
             zval part;
             array_init(&part);
             dlib::point p = shape.part(i);
@@ -169,7 +169,7 @@ PHP_METHOD(FaceLandmarkDetection, detect)
         add_assoc_zval(return_value, "rect", &rect_arr);
         add_assoc_zval(return_value, "parts", &parts_arr);
     } catch (exception& e) {
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, e.what());
+        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "%s", e.what());
         return;
     }
 }

@@ -97,7 +97,7 @@ PHP_FUNCTION(dlib_chinese_whispers)
 		}
 	} catch (exception& e)
 	{
-		zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, e.what());
+		zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "%s", e.what());
 		return;
 	}
 }

@@ -42,7 +42,7 @@ PHP_METHOD(CnnFaceDetection, __construct)
 		deserialize(cnn_face_detection_model_path) >> *pnet;
 		cfd->net = pnet;
 	} catch (exception& e) {
-		zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, e.what());
+		zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "%s", e.what());
 		return;
 	}
 }
@@ -77,7 +77,6 @@ PHP_METHOD(CnnFaceDetection, detect)
 
 		net_type *pnet = cfd->net;
 		auto dets = (*pnet)(img);
-		int rect_count = 0;
 		array_init(return_value);
 
 		// Scale the detection locations back to the original image size
@@ -101,7 +100,7 @@ PHP_METHOD(CnnFaceDetection, detect)
 	}
 	catch (exception& e)
 	{
-		zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, e.what());
+		zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "%s", e.what());
 		return;
 	}
 }
