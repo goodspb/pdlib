@@ -25,13 +25,13 @@ PHP_METHOD(CnnFaceDetection, __construct)
 	cnn_face_detection *cfd = Z_CNN_FACE_DETECTION_P(getThis());
 
 	if (NULL == cfd) {
-		php_error_docref(NULL TSRMLS_CC, E_ERROR, "Unable to find obj in CnnFaceDetection::__construct()");
+		php_error_docref(NULL, E_ERROR, "Unable to find obj in CnnFaceDetection::__construct()");
 		return;
 	}
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s",
 				&sz_cnn_face_detection_model_path, &cnn_face_detection_model_path_len) == FAILURE){
-		zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Unable to parse face_detection_model_path");
+		zend_throw_exception_ex(zend_ce_exception, 0, "Unable to parse face_detection_model_path");
 		return;
 	}
 
@@ -42,7 +42,7 @@ PHP_METHOD(CnnFaceDetection, __construct)
 		deserialize(cnn_face_detection_model_path) >> *pnet;
 		cfd->net = pnet;
 	} catch (exception& e) {
-		zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "%s", e.what());
+		zend_throw_exception_ex(zend_ce_exception, 0, "%s", e.what());
 		return;
 	}
 }
@@ -54,7 +54,7 @@ PHP_METHOD(CnnFaceDetection, detect)
 	long upsample_num = 0;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s|l", &img_path, &img_path_len, &upsample_num) == FAILURE){
-		zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Unable to parse detect arguments");
+		zend_throw_exception_ex(zend_ce_exception, 0, "Unable to parse detect arguments");
 		RETURN_FALSE;
 	}
 
@@ -100,7 +100,7 @@ PHP_METHOD(CnnFaceDetection, detect)
 	}
 	catch (exception& e)
 	{
-		zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "%s", e.what());
+		zend_throw_exception_ex(zend_ce_exception, 0, "%s", e.what());
 		return;
 	}
 }

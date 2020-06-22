@@ -78,14 +78,14 @@ PHP_METHOD(FaceLandmarkDetection, __construct)
     face_landmark_detection *fld = Z_FACE_LANDMARK_DETECTION_P(getThis());
 
     if (nullptr == fld) {
-        php_error_docref(NULL TSRMLS_CC, E_ERROR, "Unable to find obj in FaceLandmarkDetection::__construct()");
+        php_error_docref(NULL, E_ERROR, "Unable to find obj in FaceLandmarkDetection::__construct()");
         return;
     }
 
     // Parse predictor model's path
     if (zend_parse_parameters(ZEND_NUM_ARGS(), "s",
                 &sz_shape_predictor_file_path, &shape_predictor_file_path_len) == FAILURE){
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Unable to parse shape_predictor_file_path");
+        zend_throw_exception_ex(zend_ce_exception, 0, "Unable to parse shape_predictor_file_path");
         return;
     }
 
@@ -95,7 +95,7 @@ PHP_METHOD(FaceLandmarkDetection, __construct)
         fld->sp = new shape_predictor;
         deserialize(shape_predictor_file_path) >> *(fld->sp);
     } catch (exception& e) {
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "%s", e.what());
+        zend_throw_exception_ex(zend_ce_exception, 0, "%s", e.what());
         return;
     }
 }
@@ -115,7 +115,7 @@ PHP_METHOD(FaceLandmarkDetection, detect)
     // Parse path to image and bounding box. Bounding box is associative array of 4 elements - "top", "bottom", "left" and "right".
     //
     if (zend_parse_parameters(ZEND_NUM_ARGS(), "sa", &img_path, &img_path_len, &bounding_box) == FAILURE){
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Unable to parse detect arguments");
+        zend_throw_exception_ex(zend_ce_exception, 0, "Unable to parse detect arguments");
         return;
     }
 
@@ -123,7 +123,7 @@ PHP_METHOD(FaceLandmarkDetection, detect)
     HashTable *bounding_box_hash = Z_ARRVAL_P(bounding_box);
     uint32_t bounding_box_num_elements = zend_hash_num_elements(bounding_box_hash);
     if (bounding_box_num_elements < 4) {
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Bounding box (second argument) needs to have at least 4 elements");
+        zend_throw_exception_ex(zend_ce_exception, 0, "Bounding box (second argument) needs to have at least 4 elements");
         return;
     }
 
@@ -169,7 +169,7 @@ PHP_METHOD(FaceLandmarkDetection, detect)
         add_assoc_zval(return_value, "rect", &rect_arr);
         add_assoc_zval(return_value, "parts", &parts_arr);
     } catch (exception& e) {
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "%s", e.what());
+        zend_throw_exception_ex(zend_ce_exception, 0, "%s", e.what());
         return;
     }
 }

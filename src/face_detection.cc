@@ -18,7 +18,7 @@ PHP_FUNCTION(dlib_face_detection)
     long upsample_num = 0;
 
     if (zend_parse_parameters(ZEND_NUM_ARGS(), "s|l", &img_path, &img_path_len, &upsample_num) == FAILURE) {
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Unable to parse dlib_face_detection arguments");
+        zend_throw_exception_ex(zend_ce_exception, 0, "Unable to parse dlib_face_detection arguments");
         RETURN_FALSE;
     }
     try {
