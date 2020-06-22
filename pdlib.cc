@@ -38,9 +38,6 @@ extern "C" {
 ZEND_DECLARE_MODULE_GLOBALS(pdlib)
 */
 
-/* True global resources - no need for thread safety here */
-static int le_pdlib;
-
 static zend_class_entry *cnn_face_detection_ce = nullptr;
 static zend_object_handlers cnn_face_detection_obj_handlers;
 
@@ -70,7 +67,7 @@ PHP_INI_END()
 PHP_FUNCTION(confirm_pdlib_compiled)
 {
 	char *arg = NULL;
-	size_t arg_len, len;
+	size_t arg_len;
 	zend_string *strg;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &arg, &arg_len) == FAILURE) {
