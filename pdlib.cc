@@ -27,7 +27,7 @@ extern "C" {
 	#include "ext/standard/info.h"
 }
 
-	#include <dlib/simd/simd_check.h>
+#include <dlib/simd/simd_check.h>
 
 #include "php_pdlib.h"
 #include "src/chinese_whispers.h"
@@ -296,7 +296,7 @@ const zend_function_entry pdlib_functions[] = {
  */
 zend_module_entry pdlib_module_entry = {
 	STANDARD_MODULE_HEADER,
-	"pdlib",
+	PHP_PDLIB_NAME,
 	pdlib_functions,
 	PHP_MINIT(pdlib),
 	PHP_MSHUTDOWN(pdlib),
