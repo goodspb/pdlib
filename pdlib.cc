@@ -39,9 +39,6 @@ extern "C" {
 ZEND_DECLARE_MODULE_GLOBALS(pdlib)
 */
 
-/* True global resources - no need for thread safety here */
-static int le_pdlib;
-
 static zend_class_entry *cnn_face_detection_ce = nullptr;
 static zend_object_handlers cnn_face_detection_obj_handlers;
 
@@ -61,34 +58,6 @@ PHP_INI_END()
 */
 /* }}} */
 
-/* Remove the following function when you have successfully modified config.m4
-   so that your module can be compiled into PHP, it exists only for testing
-   purposes. */
-
-/* Every user-visible function in PHP should document itself in the source */
-/* {{{ proto string confirm_pdlib_compiled(string arg)
-   Return a string to confirm that the module is compiled in */
-PHP_FUNCTION(confirm_pdlib_compiled)
-{
-	char *arg = NULL;
-	size_t arg_len, len;
-	zend_string *strg;
-
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &arg, &arg_len) == FAILURE) {
-		return;
-	}
-
-	strg = strpprintf(0, "Congratulations! You have successfully modified ext/%.78s/config.m4. Module %.78s is now compiled into PHP.", "pdlib", arg);
-
-	RETURN_STR(strg);
-}
-/* }}} */
-/* The previous line is meant for vim and emacs, so it can correctly fold and
-   unfold functions in source code. See the corresponding marks just before
-   function definition, where the functions purpose is also documented. Please
-   follow this convention for the convenience of others editing your code.
-*/
-
 
 /* {{{ php_pdlib_init_globals
  */
@@ -107,10 +76,10 @@ const zend_function_entry cnn_face_detection_class_methods[] = {
 	PHP_FE_END
 };
 
-zend_object* php_cnn_face_detection_new(zend_class_entry *class_type TSRMLS_DC)
+zend_object* php_cnn_face_detection_new(zend_class_entry *class_type)
 {
 	cnn_face_detection *cfd = (cnn_face_detection*)ecalloc(1, sizeof(cnn_face_detection));
-	zend_object_std_init(&cfd->std, class_type TSRMLS_CC);
+	zend_object_std_init(&cfd->std, class_type);
 	object_properties_init(&cfd->std, class_type);
 	cfd->std.handlers = &cnn_face_detection_obj_handlers; //zend_get_std_object_handlers();
 
@@ -130,10 +99,10 @@ const zend_function_entry face_landmark_detection_class_methods[] = {
 	PHP_FE_END
 };
 
-zend_object* php_face_landmark_detection_new(zend_class_entry *class_type TSRMLS_DC)
+zend_object* php_face_landmark_detection_new(zend_class_entry *class_type)
 {
 	face_landmark_detection *fld = (face_landmark_detection*)ecalloc(1, sizeof(face_landmark_detection));
-	zend_object_std_init(&fld->std, class_type TSRMLS_CC);
+	zend_object_std_init(&fld->std, class_type);
 	object_properties_init(&fld->std, class_type);
 	fld->std.handlers = &face_landmark_detection_obj_handlers;
 
@@ -153,10 +122,10 @@ const zend_function_entry face_recognition_class_methods[] = {
 	PHP_FE_END
 };
 
-zend_object* php_face_recognition_new(zend_class_entry *class_type TSRMLS_DC)
+zend_object* php_face_recognition_new(zend_class_entry *class_type)
 {
 	face_recognition *fr = (face_recognition*)ecalloc(1, sizeof(face_recognition));
-	zend_object_std_init(&fr->std, class_type TSRMLS_CC);
+	zend_object_std_init(&fr->std, class_type);
 	object_properties_init(&fr->std, class_type);
 	fr->std.handlers = &face_recognition_obj_handlers;
 
@@ -178,7 +147,7 @@ PHP_MINIT_FUNCTION(pdlib)
 	// CnnFaceDetection class definition
 	//
 	INIT_CLASS_ENTRY(ce, "CnnFaceDetection", cnn_face_detection_class_methods);
-	cnn_face_detection_ce = zend_register_internal_class(&ce TSRMLS_CC);
+	cnn_face_detection_ce = zend_register_internal_class(&ce);
 	cnn_face_detection_ce->create_object = php_cnn_face_detection_new;
 	memcpy(&cnn_face_detection_obj_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
 	cnn_face_detection_obj_handlers.offset = XtOffsetOf(cnn_face_detection, std);
@@ -187,7 +156,7 @@ PHP_MINIT_FUNCTION(pdlib)
 	// FaceLandmarkDetection class definition
 	//
 	INIT_CLASS_ENTRY(ce, "FaceLandmarkDetection", face_landmark_detection_class_methods);
-	face_landmark_detection_ce = zend_register_internal_class(&ce TSRMLS_CC);
+	face_landmark_detection_ce = zend_register_internal_class(&ce);
 	face_landmark_detection_ce->create_object = php_face_landmark_detection_new;
 	memcpy(&face_landmark_detection_obj_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
 	face_landmark_detection_obj_handlers.offset = XtOffsetOf(face_landmark_detection, std);
@@ -196,7 +165,7 @@ PHP_MINIT_FUNCTION(pdlib)
 	// FaceRecognition class definition
 	//
 	INIT_CLASS_ENTRY(ce, "FaceRecognition", face_recognition_class_methods);
-	face_recognition_ce = zend_register_internal_class(&ce TSRMLS_CC);
+	face_recognition_ce = zend_register_internal_class(&ce);
 	face_recognition_ce->create_object = php_face_recognition_new;
 	memcpy(&face_recognition_obj_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
 	face_recognition_obj_handlers.offset = XtOffsetOf(face_recognition, std);
@@ -266,7 +235,6 @@ PHP_MINFO_FUNCTION(pdlib)
  * Every user visible function must have an entry in pdlib_functions[].
  */
 const zend_function_entry pdlib_functions[] = {
-	PHP_FE(confirm_pdlib_compiled,	NULL)
 	PHP_FE(dlib_chinese_whispers, dlib_chinese_whispers_arginfo)
 	PHP_FE(dlib_face_detection, dlib_face_detection_arginfo)
 	PHP_FE(dlib_face_landmark_detection, dlib_face_landmark_detection_arginfo)

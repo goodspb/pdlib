@@ -18,8 +18,6 @@ dnl Make sure that the comment is aligned:
 [  --with-pdlib             Include pdlib support])
 
 if test "$PHP_PDLIB" != "no"; then
-  dnl using C++11
-  CXXFLAGS="-std=c++11"
   PHP_REQUIRE_CXX()
   PHP_ADD_LIBRARY(stdc++, 1, PDLIB_SHARED_LIBADD)
   PHP_SUBST(PDLIB_SHARED_LIBADD)
@@ -49,5 +47,6 @@ if test "$PHP_PDLIB" != "no"; then
   PHP_EVAL_LIBLINE($LIBDLIB_LIBDIR, PDLIB_SHARED_LIBADD)
   PHP_EVAL_INCLINE($LIBDLIB_CFLAGS)
 
-  PHP_NEW_EXTENSION(pdlib, $pdlib_src_files, $ext_shared,, -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1, cxx)
+  dnl using C++11
+  PHP_NEW_EXTENSION(pdlib, $pdlib_src_files, $ext_shared,, -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1 -std=c++11, cxx)
 fi

@@ -6,7 +6,7 @@
 #define PHP_DLIB_CHINESE_WHISPERS_H
 
 ZEND_BEGIN_ARG_INFO_EX(dlib_chinese_whispers_arginfo, 0, 0, 1)
-    ZEND_ARG_INFO(0, edges)
+    ZEND_ARG_ARRAY_INFO(0, edges, 0)
 ZEND_END_ARG_INFO()
 PHP_FUNCTION(dlib_chinese_whispers);
 

@@ -6,10 +6,9 @@ Args given to chinese_whispers functions is not correct
 <?php
 try {
     dlib_chinese_whispers("foo");
-} catch (Exception $e) {
+} catch (Error $e) {
     var_dump($e->getMessage());
 }
 ?>
 --EXPECTF--
-Warning: dlib_chinese_whispers() expects parameter 1 to be array, string given in %s on line 3
-string(46) "Unable to parse edges in dlib_chinese_whispers"
+string(%d) "%s type array, string given"

@@ -6,7 +6,7 @@ Testing FaceLandmarkDetection constructor without arguments
 <?php
 try {
 	new FaceLandmarkDetection();
-} catch (Exception $e) {
+} catch (Error $e) {
 	var_dump($e->getMessage());
 }
 try {
@@ -16,6 +16,5 @@ try {
 }
 ?>
 --EXPECTF--
-Warning: FaceLandmarkDetection::__construct() expects exactly 1 parameter, 0 given in %s on line 3
-string(41) "Unable to parse shape_predictor_file_path"
+string(73) "FaceLandmarkDetection::__construct() expects exactly 1 parameter, 0 given"
 string(45) "Unable to open non-existent file for reading."

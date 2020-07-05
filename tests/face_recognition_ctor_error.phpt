@@ -6,10 +6,9 @@ Testing FaceRecognition constructor without arguments
 <?php
 try {
 	new FaceRecognition();
-} catch (Exception $e) {
+} catch (Error $e) {
 	var_dump($e->getMessage());
 }
 ?>
 --EXPECTF--
-Warning: FaceRecognition::__construct() expects exactly 1 parameter, 0 given in %s on line 3
-string(43) "Unable to parse face_recognition_model_path"
+string(67) "FaceRecognition::__construct() expects exactly 1 parameter, 0 given"

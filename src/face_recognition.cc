@@ -22,13 +22,12 @@ PHP_METHOD(FaceRecognition, __construct)
     face_recognition *fr = Z_FACE_RECOGNITION_P(getThis());
 
     if (NULL == fr) {
-        php_error_docref(NULL TSRMLS_CC, E_ERROR, "Unable to find obj in FaceRecognition::__construct()");
+        php_error_docref(NULL, E_ERROR, "Unable to find obj in FaceRecognition::__construct()");
         return;
     }
 
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "s",
+    if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "p",
                 &sz_face_recognition_model_path, &face_recognition_model_path_len) == FAILURE){
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Unable to parse face_recognition_model_path");
         return;
     }
 
@@ -37,7 +36,7 @@ PHP_METHOD(FaceRecognition, __construct)
         fr->net = new anet_type;
         deserialize(face_recognition_model_path) >> *(fr->net);
     } catch (exception& e) {
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, e.what());
+        zend_throw_exception_ex(zend_ce_exception, 0, "%s", e.what());
         return;
     }
 }
@@ -73,25 +72,24 @@ PHP_METHOD(FaceRecognition, computeDescriptor)
     zval *shape;
     long num_jitters = 1;
 
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "sa|l", &img_path, &img_path_len, &shape, &num_jitters) == FAILURE){
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Unable to parse computeDescriptor arguments");
+    if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "pa|l", &img_path, &img_path_len, &shape, &num_jitters) == FAILURE){
         return;
     }
 
     HashTable *shape_hash = Z_ARRVAL_P(shape);
     uint32_t shape_hash_num_elements = zend_hash_num_elements(shape_hash);
     if (shape_hash_num_elements != 2) {
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Shape (second argument) needs to have exactly 2 elements - keys \"rect\" and \"parts\"");
+        zend_throw_exception_ex(zend_ce_exception, 0, "Shape (second argument) needs to have exactly 2 elements - keys \"rect\" and \"parts\"");
         return;
     }
 
     zval *rect_zval = zend_hash_str_find(shape_hash, "rect", sizeof("rect")-1);
     if (rect_zval == nullptr) {
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Shape (second argument) array needs to have \"rect\" key"); \
+        zend_throw_exception_ex(zend_ce_exception, 0, "Shape (second argument) array needs to have \"rect\" key"); \
         return;
     }
     if (Z_TYPE_P(rect_zval) != IS_ARRAY) {
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Value of shape's key \"rect\" must be array");
+        zend_throw_exception_ex(zend_ce_exception, 0, "Value of shape's key \"rect\" must be array");
         return;
     }
     HashTable *rect_hash = Z_ARRVAL_P(rect_zval);
@@ -104,11 +102,11 @@ PHP_METHOD(FaceRecognition, computeDescriptor)
 
     zval *parts_zval = zend_hash_str_find(shape_hash, "parts", sizeof("parts")-1);
     if (parts_zval == nullptr) {
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Shape (second argument) array needs to have \"parts\" key"); \
+        zend_throw_exception_ex(zend_ce_exception, 0, "Shape (second argument) array needs to have \"parts\" key"); \
         return;
     }
     if (Z_TYPE_P(parts_zval) != IS_ARRAY) {
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Value of shape's key \"parts\" must be array");
+        zend_throw_exception_ex(zend_ce_exception, 0, "Value of shape's key \"parts\" must be array");
         return;
     }
     HashTable *parts_hash = Z_ARRVAL_P(parts_zval);
@@ -117,7 +115,7 @@ PHP_METHOD(FaceRecognition, computeDescriptor)
     point parts_points[parts_count];
 
     if ((parts_count != 5) && (parts_count != 68)) {
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC,
+        zend_throw_exception_ex(zend_ce_exception, 0,
             "The full_object_detection must use the iBUG 300W 68 point face landmark style or dlib's 5 point style");
         return;
     }
@@ -137,17 +135,17 @@ PHP_METHOD(FaceRecognition, computeDescriptor)
                     PARSE_POINT(x)
                     PARSE_POINT(y)
                     if (num_index > parts_count) {
-                        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Internal error, bad parsing of parts array");
+                        zend_throw_exception_ex(zend_ce_exception, 0, "Internal error, bad parsing of parts array");
                         return;
                     }
                     parts_points[num_index] = point(x, y);
                 } else {
-                    zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Values from parts array must be arrays with \"x\" and \"y\" keys");
+                    zend_throw_exception_ex(zend_ce_exception, 0, "Values from parts array must be arrays with \"x\" and \"y\" keys");
                     return;
                 }
                 break;
             case HASH_KEY_IS_STRING:
-                zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, "Parts array must be indexed and it contains string keys");
+                zend_throw_exception_ex(zend_ce_exception, 0, "Parts array must be indexed and it contains string keys");
                 return;
                 break;
         }
@@ -183,7 +181,7 @@ PHP_METHOD(FaceRecognition, computeDescriptor)
             add_next_index_double(return_value, d);
         }
     } catch (exception& e) {
-        zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, e.what());
+        zend_throw_exception_ex(zend_ce_exception, 0, "%s", e.what());
         return;
     }
 }

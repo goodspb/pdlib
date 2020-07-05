@@ -17,11 +17,7 @@ PHP_FUNCTION(dlib_chinese_whispers)
 	std::vector<sample_pair> edges;
 	std::vector<unsigned long> labels;
 
-	if(zend_parse_parameters(ZEND_NUM_ARGS(), "a", &edges_arg) == FAILURE){
-        zend_throw_exception_ex(
-                zend_ce_exception,
-                0 TSRMLS_CC,
-                "Unable to parse edges in dlib_chinese_whispers");
+	if(zend_parse_parameters_throw(ZEND_NUM_ARGS(), "a", &edges_arg) == FAILURE){
         return;
 	}
 
@@ -43,7 +39,7 @@ PHP_FUNCTION(dlib_chinese_whispers)
 			if (Z_TYPE_P(edge) != IS_ARRAY) {
 				zend_throw_exception_ex(
 						zend_ce_exception,
-						0 TSRMLS_CC,
+						0,
 						"Each edge provided in array needs to be numeric array of 2 elements");
 				return;
 			}
@@ -55,7 +51,7 @@ PHP_FUNCTION(dlib_chinese_whispers)
 			if (zend_hash_num_elements(edge_hash) != 2) {
 				zend_throw_exception_ex(
 						zend_ce_exception,
-						0 TSRMLS_CC,
+						0,
 						"Edges need to contain exactly two elements");
 				return;
 			}
@@ -66,7 +62,7 @@ PHP_FUNCTION(dlib_chinese_whispers)
 					!zend_hash_index_exists(edge_hash, 1)) {
 				zend_throw_exception_ex(
 						zend_ce_exception,
-						0 TSRMLS_CC,
+						0,
 						"Edge should be numeric array with integer keys");
 				return;
 			}
@@ -78,7 +74,7 @@ PHP_FUNCTION(dlib_chinese_whispers)
 			if ((Z_TYPE_P(elem_i) != IS_LONG) || (Z_TYPE_P(elem_j) != IS_LONG)) {
 				zend_throw_exception_ex(
 						zend_ce_exception,
-						0 TSRMLS_CC,
+						0,
 						"Both elements in each edge must be of long type");
 				return;
 			}
@@ -97,7 +93,7 @@ PHP_FUNCTION(dlib_chinese_whispers)
 		}
 	} catch (exception& e)
 	{
-		zend_throw_exception_ex(zend_ce_exception, 0 TSRMLS_CC, e.what());
+		zend_throw_exception_ex(zend_ce_exception, 0, "%s", e.what());
 		return;
 	}
 }
