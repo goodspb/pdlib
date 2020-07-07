@@ -59,6 +59,6 @@ Processing prediction model
 Processing recognition model
 Detection
 Faces found = 1
-Face[0] in bounding box (left=187, top=186, right=357, bottom=355)
+Face[0] in bounding box (left=191, top=200, right=355, bottom=363)
 Since we used model with 5 shape predictions, we found 5 landmark parts
 Descriptor is vector of 128 dimensions
