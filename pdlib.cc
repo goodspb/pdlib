@@ -33,6 +33,8 @@ extern "C" {
 #include "src/face_recognition.h"
 #include "src/cnn_face_detection.h"
 #include "src/face_landmark_detection.h"
+#include "src/vector.h"
+
 #include <dlib/revision.h>
 
 /* If you declare any globals in php_pdlib.h uncomment this:
@@ -222,6 +224,46 @@ PHP_MINFO_FUNCTION(pdlib)
 	php_info_print_table_row(2, "pdlib extension version", PHP_PDLIB_VERSION);
 	snprintf(buf, sizeof(buf), "%d.%d.%d", DLIB_MAJOR_VERSION, DLIB_MINOR_VERSION, DLIB_PATCH_VERSION);
 	php_info_print_table_row(2, "dlib library version", buf);
+#ifdef DLIB_USE_CUDA
+	php_info_print_table_header(2, "DLIB_USE_CUDA", "true");
+#else
+	php_info_print_table_header(2, "DLIB_USE_CUDA", "false");
+#endif
+#ifdef DLIB_USE_BLAS
+	php_info_print_table_header(2, "DLIB_USE_BLAS", "true");
+#else
+	php_info_print_table_header(2, "DLIB_USE_BLAS", "false");
+#endif
+#ifdef DLIB_USE_LAPACK
+	php_info_print_table_header(2, "DLIB_USE_LAPACK", "true");
+#else
+	php_info_print_table_header(2, "DLIB_USE_LAPACK", "false");
+#endif
+#ifdef DLIB_HAVE_AVX
+	php_info_print_table_header(2, "USE_AVX_INSTRUCTIONS", "true");
+#else
+	php_info_print_table_header(2, "USE_AVX_INSTRUCTIONS", "false");
+#endif
+#ifdef DLIB_HAVE_AVX2
+	php_info_print_table_header(2, "USE_AVX2_INSTRUCTIONS", "true");
+#else
+	php_info_print_table_header(2, "USE_AVX2_INSTRUCTIONS", "false");
+#endif
+#ifdef DLIB_HAVE_NEON
+	php_info_print_table_header(2, "USE_NEON_INSTRUCTIONS", "true");
+#else
+	php_info_print_table_header(2, "USE_NEON_INSTRUCTIONS", "false");
+#endif
+#ifdef DLIB_HAVE_SSE2
+	php_info_print_table_header(2, "USE_SSE2_INSTRUCTIONS", "true");
+#else
+	php_info_print_table_header(2, "USE_SSE2_INSTRUCTIONS", "false");
+#endif
+#ifdef DLIB_HAVE_SSE41
+	php_info_print_table_header(2, "USE_SSE4_INSTRUCTIONS", "true");
+#else
+	php_info_print_table_header(2, "USE_SSE4_INSTRUCTIONS", "false");
+#endif
 	php_info_print_table_end();
 
 	/* Remove comments if you have entries in php.ini
@@ -238,6 +280,7 @@ const zend_function_entry pdlib_functions[] = {
 	PHP_FE(dlib_chinese_whispers, dlib_chinese_whispers_arginfo)
 	PHP_FE(dlib_face_detection, dlib_face_detection_arginfo)
 	PHP_FE(dlib_face_landmark_detection, dlib_face_landmark_detection_arginfo)
+	PHP_FE(dlib_vector_length, dlib_vector_length_arginfo)
 	PHP_FE_END	/* Must be the last line in pdlib_functions[] */
 };
 /* }}} */
@@ -246,7 +289,7 @@ const zend_function_entry pdlib_functions[] = {
  */
 zend_module_entry pdlib_module_entry = {
 	STANDARD_MODULE_HEADER,
-	"pdlib",
+	PHP_PDLIB_NAME,
 	pdlib_functions,
 	PHP_MINIT(pdlib),
 	PHP_MSHUTDOWN(pdlib),
