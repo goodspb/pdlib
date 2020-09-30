@@ -11,5 +11,5 @@ try {
 }
 ?>
 --EXPECTF--
-string(68) "CnnFaceDetection::__construct() expects exactly 1 parameter, 0 given"
+string(%d) "CnnFaceDetection::__construct() expects exactly 1 %s, 0 given"
 

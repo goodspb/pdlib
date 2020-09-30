@@ -16,5 +16,5 @@ try {
 }
 ?>
 --EXPECTF--
-string(73) "FaceLandmarkDetection::__construct() expects exactly 1 parameter, 0 given"
+string(%d) "FaceLandmarkDetection::__construct() expects exactly 1 %s, 0 given"
 string(45) "Unable to open non-existent file for reading."
