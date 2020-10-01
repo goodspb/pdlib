@@ -11,4 +11,4 @@ try {
 }
 ?>
 --EXPECTF--
-string(67) "FaceRecognition::__construct() expects exactly 1 parameter, 0 given"
+string(%d) "FaceRecognition::__construct() expects exactly 1 %s, 0 given"
