@@ -36,6 +36,8 @@ git clone https://github.com/goodspb/pdlib.git
 cd pdlib
 phpize
 ./configure --enable-debug
+# you may need to indicate the dlib install location
+# PKG_CONFIG_PATH=/usr/local/lib/pkgconfig ./configure --enable-debug
 make
 sudo make install
 ```
