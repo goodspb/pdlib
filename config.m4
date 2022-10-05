@@ -47,8 +47,8 @@ if test "$PHP_PDLIB" != "no"; then
   PHP_EVAL_LIBLINE($LIBDLIB_LIBDIR, PDLIB_SHARED_LIBADD)
   PHP_EVAL_INCLINE($LIBDLIB_CFLAGS)
 
-  dnl using C++11
-  PHP_NEW_EXTENSION(pdlib, $pdlib_src_files, $ext_shared,, -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1 -std=c++11, cxx)
+  dnl using C++14
+  PHP_NEW_EXTENSION(pdlib, $pdlib_src_files, $ext_shared,, -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1 -std=c++14, cxx)
 fi
 
 AC_CONFIG_COMMANDS_POST([
