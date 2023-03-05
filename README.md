@@ -3,7 +3,7 @@
 ## Requirements
 - Dlib 19.13+
 - PHP 7.0+
-- C++11
+- C++14
 - libx11-dev (on Ubuntu: `sudo apt-get install libx11-dev`)
 
 ## Recommended
