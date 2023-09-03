@@ -31,7 +31,7 @@ extern "C" {
 extern zend_module_entry pdlib_module_entry;
 #define phpext_pdlib_ptr &pdlib_module_entry
 
-#define PHP_PDLIB_VERSION "1.0.2"
+#define PHP_PDLIB_VERSION "1.1.0"
 #define PHP_PDLIB_NAME     "pdlib"
 
 #ifdef PHP_WIN32
