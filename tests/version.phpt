@@ -7,4 +7,4 @@ Just test php extension version
 var_dump(phpversion('pdlib'));
 ?>
 --EXPECT--
-string(5) "1.0.2"
+string(5) "1.1.0"
